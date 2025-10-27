@@ -1,20 +1,62 @@
-# --- Este es el NUEVO y CORRECTO archivo de build ---
-# Usa el "Reusable Workflow" oficial de ZMK con la sintaxis de "include"
+
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    # Llama al script de compilación oficial de ZMK
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
-    with:
-      # --- Esta es la forma correcta de definir tu build ---
-      # Le pasamos una lista de "builds" a la variable "include"
-      include: |
-        [
-          {
-            board: "nice_nano_v2",
-            shield: "wired_split_funda"
-          }
-        ]
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:stable
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # --- AQUÍ ESTÁ LA MODIFICACIÓN ---
+        # Editamos esta sección para definir tu build
+        include:
+          - board: nice_nano_v2
+            shield: wired_split_funda
+        # --- FIN DE LA MODIFICACIÓN ---
+
+    steps:
+      - name: Checkout ZMK
+        uses: actions/checkout@v4
+        with:
+          repository: zmkfirmware/zmk
+          submodules: recursive
+
+      - name: Checkout ZMK Config
+        uses: actions/checkout@v4
+        with:
+          path: config
+
+      - name: Cache west modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            bootloader/
+            modules/
+            tools/
+            zephyr/
+            zmk/
+          key: west-cache-${{ hashFiles('config/west.yml') }}
+          restore-keys: |
+            west-cache-
+
+      - name: Initialize west
+        run: |
+          west init -l config
+          west update
+
+      - name: Build
+        run: |
+          west build -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
+
+      - name: Archive firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.board }}-${{ matrix.shield }}
+          path: |
+            build/zephyr/zmk.uf2
+            build/zeofir/zmk.hex
 
