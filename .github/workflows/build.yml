@@ -1,36 +1,24 @@
-# Archivo de configuración para GitHub Actions
-# Esto le dice a ZMK cómo compilar tu firmware
+# --- Este es el NUEVO y CORRECTO archivo de build ---
+# Usa el "Reusable Workflow" oficial de ZMK
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: zmkfirmware/zmk-build-arm:stable
-    
-    steps:
-      - name: Checkout ZMK
-        uses: actions/checkout@v4
-        with:
-          repository: zmkfirmware/zmk
-          submodules: recursive
-
-      - name: Checkout ZMK Config
-        uses: actions/checkout@v4
-        with:
-          path: config
+    # Llama al script de compilación oficial de ZMK
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    with:
+      # --- Personaliza tu build aquí ---
       
-      - name: Build
-        run: |
-          west init -l config
-          west update
-          west build -b nice_nano_v2 -- -DSHIELD=wired_split_funda
-          
-      - name: Archive firmware
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware
-          path: |
-            build/zephyr/zmk.uf2
-            build/zephyr/zmk.hex
+      # 1. Placa (Board):
+      # Tu placa es una nice!nano v2 (o un clon compatible)
+      board: '["nice_nano_v2"]'
+      
+      # 2. Shield:
+      # El nombre de tus archivos .conf y .keymap
+      shield: '["wired_split_funda"]'
+      
+      # 3. Archivo de configuración (Opcional, pero recomendado)
+      # Apunta a tu archivo .conf personalizado
+      conf_file: '["wired_split_funda.conf"]'
+
