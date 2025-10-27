@@ -1,5 +1,5 @@
 # --- Este es el NUEVO y CORRECTO archivo de build ---
-# Usa el "Reusable Workflow" oficial de ZMK
+# Usa el "Reusable Workflow" oficial de ZMK con la sintaxis de "include"
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -8,17 +8,13 @@ jobs:
     # Llama al script de compilación oficial de ZMK
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
     with:
-      # --- Personaliza tu build aquí ---
-      
-      # 1. Placa (Board):
-      # Tu placa es una nice!nano v2 (o un clon compatible)
-      board: '["nice_nano_v2"]'
-      
-      # 2. Shield:
-      # El nombre de tus archivos .conf y .keymap
-      shield: '["wired_split_funda"]'
-      
-      # 3. Archivo de configuración (Opcional, pero recomendado)
-      # Apunta a tu archivo .conf personalizado
-      conf_file: '["wired_split_funda.conf"]'
+      # --- Esta es la forma correcta de definir tu build ---
+      # Le pasamos una lista de "builds" a la variable "include"
+      include: |
+        [
+          {
+            board: "nice_nano_v2",
+            shield: "wired_split_funda"
+          }
+        ]
 
