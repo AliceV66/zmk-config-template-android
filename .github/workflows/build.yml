@@ -1,5 +1,3 @@
-
-
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
@@ -50,7 +48,8 @@ jobs:
 
       - name: Build
         run: |
-          west build -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
+          # <--- CORRECCIÓN AQUÍ: Añadimos "-s zmk/app" para apuntar al código fuente
+          west build -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
 
       - name: Archive firmware
         uses: actions/upload-artifact@v4
@@ -58,5 +57,5 @@ jobs:
           name: firmware-${{ matrix.board }}-${{ matrix.shield }}
           path: |
             build/zephyr/zmk.uf2
-            build/zeofir/zmk.hex
-
+            # <--- CORRECCIÓN AQUÍ: Era "zeofir" y debe ser "zephyr"
+            build/zephyr/zmk.hex
