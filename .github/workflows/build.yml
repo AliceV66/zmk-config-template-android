@@ -12,15 +12,10 @@ jobs:
         include:
           - board: nice_nano_v2
             shield: wired_split_funda
-        # --- FIN DE LA MODIFICACIÓN ---
+        
 
     steps:
-      - name: Checkout ZMK
-        uses: actions/checkout@v4
-        with:
-          repository: zmkfirmware/zmk
-          submodules: recursive
-
+   
       - name: Checkout ZMK Config
         uses: actions/checkout@v4
         with:
@@ -46,14 +41,11 @@ jobs:
 
       - name: Build
         run: |
-          # <--- CORRECCIÓN AQUÍ: La ruta -DZMK_CONFIG debe apuntar a "config"
-          west build -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
-
+        
       - name: Archive firmware
         uses: actions/upload-artifact@v4
         with:
           name: firmware-${{ matrix.board }}-${{ matrix.shield }}
           path: |
             build/zephyr/zmk.uf2
-            # Tu comentario aquí era correcto, la ruta es zephyr
-            build/zephyr/zmk.hex
+          
