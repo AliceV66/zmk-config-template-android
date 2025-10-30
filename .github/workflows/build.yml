@@ -15,7 +15,7 @@ jobs:
         
 
     steps:
-   
+    
       - name: Checkout ZMK Config
         uses: actions/checkout@v4
         with:
@@ -41,6 +41,8 @@ jobs:
 
       - name: Build
         run: |
+          
+          west build -p pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
         
       - name: Archive firmware
         uses: actions/upload-artifact@v4
@@ -48,4 +50,5 @@ jobs:
           name: firmware-${{ matrix.board }}-${{ matrix.shield }}
           path: |
             build/zephyr/zmk.uf2
-          
+            
+            build/zephyr/zmk.hex
