@@ -9,8 +9,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # --- AQUÍ ESTÁ LA MODIFICACIÓN ---
-        # Editamos esta sección para definir tu build
         include:
           - board: nice_nano_v2
             shield: wired_split_funda
@@ -48,8 +46,8 @@ jobs:
 
       - name: Build
         run: |
-          # <--- CORRECCIÓN AQUÍ: Añadimos "-s zmk/app" para apuntar al código fuente
-          west build -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
+          # <--- CORRECCIÓN AQUÍ: La ruta -DZMK_CONFIG debe apuntar a "config"
+          west build -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
 
       - name: Archive firmware
         uses: actions/upload-artifact@v4
@@ -57,5 +55,5 @@ jobs:
           name: firmware-${{ matrix.board }}-${{ matrix.shield }}
           path: |
             build/zephyr/zmk.uf2
-            # <--- CORRECCIÓN AQUÍ: Era "zeofir" y debe ser "zephyr"
+            # Tu comentario aquí era correcto, la ruta es zephyr
             build/zephyr/zmk.hex
