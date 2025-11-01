@@ -13,27 +13,32 @@ jobs:
           - board: nice_nano_v2
             shield: wired_split_funda
         
-
     steps:
     
       - name: Checkout ZMK Config
         uses: actions/checkout@v4
         with:
-          path: config
+          # 1. Descargamos tu repo en una carpeta con nombre lógico
+          path: zmk-config
 
-      # (Paso de caché eliminado para asegurar una compilación limpia)
+      # No usamos caché para garantizar la limpieza
+      # - name: Cache west modules ... (eliminado)
 
       - name: Initialize west
         run: |
-          west init -l config
-          # --- CORRECCIÓN AQUÍ ---
-          # He eliminado el "-v" que causaba el error
+          # 2. Inicializamos west, diciéndole que el "manifiesto"
+          #    está en la carpeta 'zmk-config' que acabamos de descargar.
+          west init -l zmk-config
+          
+          # 3. west update ahora leerá zmk-config/west.yml
+          #    y descargará 'zmk', 'zephyr', etc., en la raíz.
           west update
 
       - name: Build
         run: |
-          # La corrección de ruta "config/config" sigue siendo correcta
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
+          # 4. Construimos, apuntando -DZMK_CONFIG a la ruta exacta
+          #    y sin ambigüedades donde están tus archivos .conf y .keymap.
+          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/zmk-config/config"
         
       - name: Archive firmware
         uses: actions/upload-artifact@v4
