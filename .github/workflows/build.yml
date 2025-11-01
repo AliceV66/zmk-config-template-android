@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: |
           # La corrección de ruta "config/config" sigue siendo correcta
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }/config/config"
+          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
         
       - name: Archive firmware
         uses: actions/upload-artifact@v4
