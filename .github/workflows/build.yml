@@ -17,11 +17,14 @@ jobs:
     steps:
     
       - name: Checkout ZMK Config
+        # Esto descarga tu repositorio de configuración en la carpeta 'config'
         uses: actions/checkout@v4
         with:
           path: config
 
       - name: Cache west modules
+        # Esta es la corrección clave: "v2" en la 'key'
+        # Fuerza a GitHub a ignorar el cache corrupto y descargar todo de nuevo.
         uses: actions/cache@v4
         with:
           path: |
@@ -30,7 +33,7 @@ jobs:
             tools/
             zephyr/
             zmk/
-          key: west-cache-${{ hashFiles('config/west.yml') }}
+          key: west-cache-v2-${{ hashFiles('config/west.yml') }}
           restore-keys: |
             west-cache-
 
@@ -38,17 +41,21 @@ jobs:
         run: |
           west init -l config
           west update
+          # 'west update' leerá tu config/west.yml y descargará ZMK y Zephyr
 
       - name: Build
         run: |
-          
+          # El --pristine limpia compilaciones anteriores
+          # El -s zmk/app le dice dónde está el código fuente de ZMK
+          # El -DZMK_CONFIG apunta a tu carpeta de configuración
           west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
         
       - name: Archive firmware
+        # Si la compilación tiene éxito, esto tomará los archivos .uf2 y .hex
+        # y los adjuntará a la página de la "Action" para que los descargues.
         uses: actions/upload-artifact@v4
         with:
           name: firmware-${{ matrix.board }}-${{ matrix.shield }}
           path: |
             build/zephyr/zmk.uf2
             build/zephyr/zmk.hex
-
