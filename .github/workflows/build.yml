@@ -1,10 +1,13 @@
 on: [push, pull_request, workflow_dispatch]
+name: Build
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
+      # Usamos la imagen estable más reciente
       image: zmkfirmware/zmk-build-arm:stable
+    name: Build (nice_nano_v2 / wired_split_funda)
 
     strategy:
       fail-fast: false
@@ -14,30 +17,44 @@ jobs:
             shield: wired_split_funda
         
     steps:
-    
-      - name: Checkout ZMK Config
+      - name: Checkout
+        # 1. Descargamos tu repo en la raíz (${GITHUB_WORKSPACE})
         uses: actions/checkout@v4
-        # SIN ARGUMENTO "path:".
-        # Esto descarga tu repositorio (con 'west.yml' en la raíz y 'config/' adentro)
-        # directamente en ${{ github.workspace }}
 
-      - name: Initialize west
-        run: |
-          # 1. Inicializamos west. '-l' significa "usar el manifiesto local"
-          #    que ahora es ${{ github.workspace }}/west.yml
-          #    (Esta es la forma estándar de ZMK)
-          west init -l
-          
-          # 2. west update leerá west.yml, verá el 'self: path: config',
-          #    y descargará 'zmk' y 'zephyr' en la raíz.
-          west update
+      - name: Cache west modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            modules/
+            tools/
+            zephyr/
+            bootloader/
+            zmk/
+          # 2. La clave del caché AHORA SÍ apunta a tu 'west.yml' real
+          key: ${{ runner.os }}-west-cache-${{ hashFiles('west.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-west-cache-
 
-      - name: Build
+      - name: West Init
+        # 3. El comando 'west init -l' usa el 'west.yml' de la raíz.
+        #    Esta era la pieza que faltaba.
+        run: west init -l
+
+      - name: West Update
+        # 4. 'west update' AHORA leerá 'west.yml' correctamente
+        #    y descargará 'zmk', 'zephyr', etc.
+        run: west update
+
+      - name: West Zephyr export
+        # (Este paso del 'original' es una buena práctica)
+        run: west zephyr-export
+
+      - name: West Build
         run: |
-          # 3. Construimos. La app está en 'zmk/app'.
-          #    Tu configuración está en 'config/' (como define tu west.yml).
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
-        
+          # 5. Construimos, apuntando -DZMK_CONFIG a tu carpeta 'config/'
+          #    (Esto es correcto porque tu 'west.yml' dice 'self: path: config')
+          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+      
       - name: Archive firmware
         uses: actions/upload-artifact@v4
         with:
