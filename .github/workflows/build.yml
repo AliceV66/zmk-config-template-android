@@ -17,28 +17,26 @@ jobs:
     
       - name: Checkout ZMK Config
         uses: actions/checkout@v4
-        with:
-          # 1. Descargamos tu repo en una carpeta con nombre lógico
-          path: zmk-config
-
-      # No usamos caché para garantizar la limpieza
-      # - name: Cache west modules ... (eliminado)
+        # SIN ARGUMENTO "path:".
+        # Esto descarga tu repositorio (con 'west.yml' en la raíz y 'config/' adentro)
+        # directamente en ${{ github.workspace }}
 
       - name: Initialize west
         run: |
-          # 2. Inicializamos west, diciéndole que el "manifiesto"
-          #    está en la carpeta 'zmk-config' que acabamos de descargar.
-          west init -l zmk-config
+          # 1. Inicializamos west. '-l' significa "usar el manifiesto local"
+          #    que ahora es ${{ github.workspace }}/west.yml
+          #    (Esta es la forma estándar de ZMK)
+          west init -l
           
-          # 3. west update ahora leerá zmk-config/west.yml
-          #    y descargará 'zmk', 'zephyr', etc., en la raíz.
+          # 2. west update leerá west.yml, verá el 'self: path: config',
+          #    y descargará 'zmk' y 'zephyr' en la raíz.
           west update
 
       - name: Build
         run: |
-          # 4. Construimos, apuntando -DZMK_CONFIG a la ruta exacta
-          #    y sin ambigüedades donde están tus archivos .conf y .keymap.
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/zmk-config/config"
+          # 3. Construimos. La app está en 'zmk/app'.
+          #    Tu configuración está en 'config/' (como define tu west.yml).
+          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config"
         
       - name: Archive firmware
         uses: actions/upload-artifact@v4
