@@ -26,15 +26,14 @@ jobs:
       - name: Initialize west
         run: |
           west init -l config
-          # He añadido -v (verbose) para que puedas ver lo que descarga
-          west update -v
+          # --- CORRECCIÓN AQUÍ ---
+          # He eliminado el "-v" que causaba el error
+          west update
 
       - name: Build
         run: |
-          # --- CORRECCIÓN DE RUTA AQUÍ ---
-          # Apuntamos a la subcarpeta "config/config"
-          # que es donde tus archivos .conf y .keymap realmente se encuentran.
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }}/config/config"
+          # La corrección de ruta "config/config" sigue siendo correcta
+          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${{ github.workspace }/config/config"
         
       - name: Archive firmware
         uses: actions/upload-artifact@v4
