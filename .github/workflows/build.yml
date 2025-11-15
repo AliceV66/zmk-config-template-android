@@ -1,61 +1,8 @@
+# .github/workflows/build.yml
+
 on: [push, pull_request, workflow_dispatch]
 name: Build
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: zmkfirmware/zmk-build-arm:stable
-    name: Build (nice_nano_v2 / wired_split_funda)
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - board: nice_nano_v2
-            shield: wired_split_funda
-        
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Cache west modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            modules/
-            tools/
-            zephyr/
-            bootloader/
-            zmk/
-          key: ${{ runner.os }}-west-cache-${{ hashFiles('west.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-west-cache-
-
-      - name: West Init
-        # Esto lee tu west.yml de la raíz (¡correcto!)
-        run: west init -l
-
-      - name: West Update
-        # Esto descarga zmk y zephyr (¡correcto!)
-        run: west update
-
-      - name: West Zephyr export
-        run: west zephyr-export
-
-      - name: West Build
-        run: |
-          # Ahora, ZMK encontrará tu shield automáticamente
-          # a través de la estructura de carpetas estándar.
-          # El -DZMK_CONFIG ya no es necesario, pero lo
-          # dejamos apuntando a 'config' por si tienes
-          # un .conf global.
-          west build --pristine -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-      
-      - name: Archive firmware
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware-${{ matrix.board }}-${{ matrix.shield }}
-          path: |
-            build/zephyr/zmk.uf2
-            build/zephyr/zmk.hex
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
