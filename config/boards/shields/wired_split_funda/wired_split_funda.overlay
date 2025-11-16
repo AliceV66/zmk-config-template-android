@@ -45,11 +45,11 @@
 
     // --- Definición de Ejes de Joystick 2 (Analógico - Mouse) ---
     chosen {
-        zmk,pointing-analog-x-channel = <0>; // P0.02 (D20) es ADC Canal 0
-        zmk,pointing-analog-y-channel = <7>; // P0.31 (D21) es ADC Canal 7
+        zmk,pointing-device-analog-x-channel = <0>; // P0.02 (D20) es ADC Canal 0
+        zmk,pointing-device-analog-y-channel = <7>; // P0.31 (D21) es ADC Canal 7
     }; //
 
     pointing: pointing {
-        compatible = "zmk,pointing-analog";
+        compatible = "zmk,pointing-device-analog";
     }; //
 };
