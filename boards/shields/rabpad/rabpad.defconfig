@@ -1,0 +1,9 @@
+if SHIELD_RABPAD
+
+config ZMK_KEYBOARD_NAME
+    default "RabPad"
+
+config ZMK_SPLIT
+    default n
+
+endif
