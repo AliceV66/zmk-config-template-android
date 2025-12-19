@@ -15,42 +15,42 @@
 
         default_layer {
             bindings = <
-                // CORRECTED ROW MAPPING
-                // Row 0 (Phys 2): W, S, X...
-                // Row 1 (Phys 4): R, F, V...
-                // Row 2 (Phys 3): E, D, C...
-                // Row 3 (Phys 5): T, G, B...
-                // Row 4 (Phys 1): Q, A, Z...
+                // CORRECTED ROW MAPPING + RIGHT HAND COL SWAP (3 <-> 5)
+                // Row 0 (Phys 2): W, S, X | M, J, U
+                // Row 1 (Phys 4): R, F, V | RET, L, O
+                // Row 2 (Phys 3): E, D, C | SPACE, K, I
+                // Row 3 (Phys 5): T, G, B | ESC, BSPC, P
+                // Row 4 (Phys 1): Q, A, Z | N, H, Y
 
-                &kp W &kp S &kp X &kp U &kp J &kp M
-                &kp R &kp F &kp V &kp O &kp L &kp RET
-                &kp E &kp D &kp C &kp I &kp K &lt 2 SPACE
-                &kp T &kp G &kp B &kp P &kp BSPC &lt 1 ESC
-                &kp Q &kp A &kp Z &kp Y &kp H &kp N
+                &kp W &kp S &kp X   &kp M &kp J &kp U
+                &kp R &kp F &kp V   &kp RET &kp L &kp O
+                &kp E &kp D &kp C   &lt 2 SPACE &kp K &kp I
+                &kp T &kp G &kp B   &lt 1 ESC &kp BSPC &kp P
+                &kp Q &kp A &kp Z   &kp N &kp H &kp Y
             >;
         };
 
         layer_1 {
             bindings = <
-                // LAYER 1: NUMBERS & SYMBOLS (Permuted)
+                // LAYER 1: NUMBERS & SYMBOLS (Permuted + Col Swap)
                 
-                &kp N2    &kp N7    &kp COMMA &kp BSLH  &kp RBKT  &kp RPAR
-                &kp N4    &kp N9    &kp SQT   &kp EQUAL &kp RBRC  &kp GT
-                &kp N3    &kp N8    &kp SEMI  &kp MINUS &kp LBRC  &kp LT
-                &kp N5    &kp N0    &kp GRAVE &kp PLUS  &kp STAR  &trans
-                &kp N1    &kp N6    &kp DOT   &kp FSLH  &kp LBKT  &kp LPAR
+                &kp N2    &kp N7    &kp COMMA   &kp RPAR  &kp RBKT  &kp BSLH
+                &kp N4    &kp N9    &kp SQT     &kp GT    &kp RBRC  &kp EQUAL
+                &kp N3    &kp N8    &kp SEMI    &kp LT    &kp LBRC  &kp MINUS
+                &kp N5    &kp N0    &kp GRAVE   &trans    &kp STAR  &kp PLUS
+                &kp N1    &kp N6    &kp DOT     &kp LPAR  &kp LBKT  &kp FSLH
             >;
         };
 
         layer_2 {
             bindings = <
-                // LAYER 2: NAVIGATION & F-KEYS (Permuted)
+                // LAYER 2: NAVIGATION & F-KEYS (Permuted + Col Swap)
 
-                &kp F2    &kp F7    &kp F12   &kp DOWN  &kp PG_DN &kp PIPE
-                &kp F4    &kp F9    &kp CAPS  &kp RIGHT &kp DEL   &trans
-                &kp F3    &kp F8    &kp TAB   &kp UP    &kp END   &kp TILDE
-                &kp F5    &kp F10   &kp INS   &kp HOME  &kp BSPC  &trans
-                &kp F1    &kp F6    &kp F11   &kp LEFT  &kp PG_UP &kp UNDER
+                &kp F2    &kp F7    &kp F12   &kp PIPE  &kp PG_DN &kp DOWN
+                &kp F4    &kp F9    &kp CAPS  &trans    &kp DEL   &kp RIGHT
+                &kp F3    &kp F8    &kp TAB   &kp TILDE &kp END   &kp UP
+                &kp F5    &kp F10   &kp INS   &trans    &kp BSPC  &kp HOME
+                &kp F1    &kp F6    &kp F11   &kp UNDER &kp PG_UP &kp LEFT
             >;
         };
     };
