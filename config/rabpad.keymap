@@ -15,55 +15,42 @@
 
         default_layer {
             bindings = <
-                // TRANSPOSED QWERTY LAYOUT (6x5)
-                // Col 0: Q, W, E, R, T
-                // Col 1: A, S, D, F, G
-                // Col 2: Z, X, C, V, B
-                // Col 3: Y, U, I, O, P
-                // Col 4: H, J, K, L, BACKSPACE
-                // Col 5: N, M, SPACE, ENTER, LAYER_TAP
+                // CORRECTED ROW MAPPING
+                // Row 0 (Phys 2): W, S, X...
+                // Row 1 (Phys 4): R, F, V...
+                // Row 2 (Phys 3): E, D, C...
+                // Row 3 (Phys 5): T, G, B...
+                // Row 4 (Phys 1): Q, A, Z...
 
-                &kp Q &kp A &kp Z &kp Y &kp H &kp N
                 &kp W &kp S &kp X &kp U &kp J &kp M
-                &kp E &kp D &kp C &kp I &kp K &lt 2 SPACE
                 &kp R &kp F &kp V &kp O &kp L &kp RET
+                &kp E &kp D &kp C &kp I &kp K &lt 2 SPACE
                 &kp T &kp G &kp B &kp P &kp BSPC &lt 1 ESC
+                &kp Q &kp A &kp Z &kp Y &kp H &kp N
             >;
         };
 
         layer_1 {
             bindings = <
-                // LAYER 1: NUMBERS & SYMBOLS
-                // Col 0: 1, 2, 3, 4, 5
-                // Col 1: 6, 7, 8, 9, 0
-                // Col 2: . , ; ' `
-                // Col 3: / \ - = +
-                // Col 4: [ ] { } *
-                // Col 5: ( ) < > TRNS
-
-                &kp N1    &kp N6    &kp DOT   &kp FSLH  &kp LBKT  &kp LPAR
+                // LAYER 1: NUMBERS & SYMBOLS (Permuted)
+                
                 &kp N2    &kp N7    &kp COMMA &kp BSLH  &kp RBKT  &kp RPAR
-                &kp N3    &kp N8    &kp SEMI  &kp MINUS &kp LBRC  &kp LT
                 &kp N4    &kp N9    &kp SQT   &kp EQUAL &kp RBRC  &kp GT
+                &kp N3    &kp N8    &kp SEMI  &kp MINUS &kp LBRC  &kp LT
                 &kp N5    &kp N0    &kp GRAVE &kp PLUS  &kp STAR  &trans
+                &kp N1    &kp N6    &kp DOT   &kp FSLH  &kp LBKT  &kp LPAR
             >;
         };
 
         layer_2 {
             bindings = <
-                // LAYER 2: NAVIGATION & F-KEYS
-                // Col 0: F1..F5
-                // Col 1: F6..F10
-                // Col 2: F11, F12, TAB, CAPS, INS
-                // Col 3: LEFT, DOWN, UP, RIGHT, HOME
-                // Col 4: PGUP, PGDN, END, DEL, BSPC
-                // Col 5: _, |, ~, TRNS, TRNS
+                // LAYER 2: NAVIGATION & F-KEYS (Permuted)
 
-                &kp F1    &kp F6    &kp F11   &kp LEFT  &kp PG_UP &kp UNDER
                 &kp F2    &kp F7    &kp F12   &kp DOWN  &kp PG_DN &kp PIPE
-                &kp F3    &kp F8    &kp TAB   &kp UP    &kp END   &kp TILDE
                 &kp F4    &kp F9    &kp CAPS  &kp RIGHT &kp DEL   &trans
+                &kp F3    &kp F8    &kp TAB   &kp UP    &kp END   &kp TILDE
                 &kp F5    &kp F10   &kp INS   &kp HOME  &kp BSPC  &trans
+                &kp F1    &kp F6    &kp F11   &kp LEFT  &kp PG_UP &kp UNDER
             >;
         };
     };
