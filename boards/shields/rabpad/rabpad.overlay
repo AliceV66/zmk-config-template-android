@@ -39,7 +39,7 @@
         // Usamos &gpio0 y &gpio1 directamente para máxima compatibilidad con el clon
         
         col-gpios
-            = <&gpio0 6  GPIO_ACTIVE_HIGH> // Col 0
+            = <&gpio0 10 GPIO_ACTIVE_HIGH> // Col 0 (Moved from D1/P0.06 to D16/P0.10)
             , <&gpio0 8  GPIO_ACTIVE_HIGH> // Col 1
             , <&gpio0 17 GPIO_ACTIVE_HIGH> // Col 2
             , <&gpio0 20 GPIO_ACTIVE_HIGH> // Col 3
